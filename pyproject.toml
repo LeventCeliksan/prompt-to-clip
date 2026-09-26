@@ -1,0 +1,24 @@
+[project]
+name = "prompt-to-clip"
+version = "0.1.0"
+description = "Generate an image from a prompt with SDXL (or any diffusers model), refine it with a fixed seed, and animate it into a short Ken Burns style MP4"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+authors = [{name = "Levent Çeliksan"}]
+dependencies = ["torch>=2.1", "diffusers>=0.27", "transformers>=4.40", "accelerate", "safetensors", "pillow", "numpy",
+                "imageio>=2.31", "imageio-ffmpeg", "gradio>=4.40"]
+
+[project.optional-dependencies]
+test = ["pytest", "opencv-python-headless"]
+
+[project.scripts]
+prompt-to-clip = "prompt_clip.cli:main"
+prompt-to-clip-ui = "prompt_clip.app:main"
+
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["prompt_clip"]
