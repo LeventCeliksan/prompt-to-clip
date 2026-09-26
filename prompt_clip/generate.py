@@ -5,6 +5,8 @@ from dataclasses import dataclass
 from typing import Optional
 
 DEFAULT_MODEL = "stabilityai/stable-diffusion-xl-base-1.0"
+# The default checkpoint is pinned to a known commit, so a changed upstream repo cannot swap the weights silently.
+PINNED_REVISIONS = {DEFAULT_MODEL: "462165984030d82259a11f4367a4eed129e94a7b"}
 DEFAULT_NEGATIVE = "blurry, low quality, distorted, deformed, ugly, worst quality"
 QUALITY_SUFFIX = ", highly detailed, sharp focus, professional photography"
 
@@ -31,6 +33,7 @@ def load_pipeline(model: str = DEFAULT_MODEL, device: Optional[str] = None, allo
     device = device or pick_device()
     dtype = torch.float16 if device in ("cuda", "mps") else torch.float32
     pipe = AutoPipelineForText2Image.from_pretrained(model, torch_dtype=dtype,
+                                                     revision=PINNED_REVISIONS.get(model, "main"),
                                                      use_safetensors=None if allow_pickle_weights else True)
     pipe = pipe.to(device)
     if device != "cpu":
